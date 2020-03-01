@@ -18,6 +18,7 @@ const keepLastOfStreaks = (length, getBucket, getMonotonic, opt = {}) => {
 
 	const check = (item) => {
 		const bucket = getBucket(item)
+		if (bucket === null) return []
 		const ended = []
 
 		const changes = _check(item)

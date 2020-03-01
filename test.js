@@ -1,6 +1,6 @@
 'use strict'
 
-const {deepStrictEqual: eql} = require('assert')
+const {deepStrictEqual: eql, throws} = require('assert')
 const findStartsEnds = require('./starts-ends')
 const keepLastOfStreaks = require('.')
 const {START, END} = findStartsEnds
@@ -22,6 +22,8 @@ const testFindStartsEnds = () => {
 	eql(check(a1), [])
 	eql(check(b2), ['b', START])
 	eql(check(c2), ['c', START])
+	eql(check({kind: null, t: 4}), []) // should be ignored
+	throws(() => check({kind: 'c', t: null}))
 	eql(check(c5), ['a', END])
 	eql(check(b6), ['b', END, 'b', START])
 	eql(flush(), ['c', END, 'b', END])

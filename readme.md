@@ -45,7 +45,9 @@ const item4 = [5, 'c']
 const item5 = [6, 'b']
 ```
 
-Two items can be part of a streak if they have the same `bucket(item)`. Using `monotonic(item)`, `find-streaks` will tell if two items are part of a streak.
+Two items can be part of a streak if they have the same `bucket(item)`, which must return a string or `null`.
+
+`find-streaks` will tell if two items are witin a streak using `monotonic(item)`, which must return an integer.
 
 ```js
 const streakLength = 3

@@ -19,7 +19,11 @@ const findStartsEnds = (length, getBucket, getMonotonic) => {
 
 	const check = (item) => {
 		const bucket = getBucket(item)
+		if (bucket === null) return []
 		const monotonic = getMonotonic(item)
+		if (!Number.isInteger(monotonic)) {
+			throw new Error('getMonotonic(item) must be an integer')
+		}
 		let changes = []
 
 		// a lot of time has passed, flush all

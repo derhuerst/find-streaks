@@ -24,8 +24,10 @@
 	"dependencies": {
 	},
 	"devDependencies": {
+		"benchmark": "^2.1.4"
 	},
 	"scripts": {
+		"benchmark": "env NODE_ENV=production node benchmark/index.js",
 		"test": "node test.js",
 		"prepublishOnly": "npm test"
 	}

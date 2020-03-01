@@ -34,23 +34,55 @@ npm install find-streaks
 
 ## Usage
 
+These items represent the chart above:
+
+```js
+const item1 = [0, 'a']
+const item2 = [1, 'a']
+const item3 = [2, 'b']
+const item4 = [2, 'c']
+const item4 = [5, 'c']
+const item5 = [6, 'b']
+```
+
 Two items can be part of a streak if they have the same `bucket(item)`. Using `monotonic(item)`, `find-streaks` will tell if two items are part of a streak.
 
 ```js
-const findStreaks = require('find-streaks')
-const {START, END} = findStreaks
-
 const streakLength = 3
 const bucket = item => item[1]
 const monotonic = item => item[0]
-const {check, flush} = findStreaks(streakLength, bucket, monotonic)
+```
 
-check([0, 'a']) // ['a', START]
-check([1, 'a']) // []
-check([2, 'b']) // ['b', START]
-check([2, 'c']) // ['c', START]
-check([5, 'c']) // ['a', END]
-check([6, 'b']) // ['b', END, 'b', START]
+## keeping only the last item of each streak
+
+```js
+const keepLastOfStreaks = require('find-streaks')
+
+const {check, flush} = keepLastOfStreaks(streakLength, bucket, monotonic)
+
+check(item1) // []
+check(item2) // []
+check(item3) // []
+check(item4) // []
+check(item5) // [item2]
+check(item6) // [item3]
+flush() // [item5, item6]
+```
+
+## finding raw starts & ends of streaks
+
+```js
+const findStartsEnds = require('find-streaks/starts-ends')
+const {START, END} = findStartsEnds
+
+const {check, flush} = findStartsEnds(streakLength, bucket, monotonic)
+
+check(item1) // ['a', START]
+check(item2) // []
+check(item3) // ['b', START]
+check(item4) // ['c', START]
+check(item5) // ['a', END]
+check(item6) // ['b', END, 'b', START]
 flush() // ['c', END, 'b', END]
 ```
 

@@ -1,67 +1,48 @@
 'use strict'
 
-const {insert, removeLower} = require('./lib/sorted-array')
+const findStartsEnds = require('./starts-ends')
+const {END, START} = findStartsEnds
 
-const START = 1
-const END = 0
-
-const findStreaks = (length, getBucket, getMonotonic) => {
-	if ('function' !== typeof getBucket) {
-		throw new Error('getBucket must be a function')
-	}
-	if ('function' !== typeof getMonotonic) {
-		throw new Error('getMonotonic must be a function')
+const keepLastOfStreaks = (length, getBucket, getMonotonic, opt = {}) => {
+	const {
+		store,
+	} = {
+		store: new Map(),
+		...opt,
 	}
 
-	let latestMonotonic = -Infinity
-	let streaks = new Map()
-	const expiringSoon = []
+	const {
+		check: _check,
+		flush: _flush,
+	} = findStartsEnds(length, getBucket, getMonotonic)
 
 	const check = (item) => {
 		const bucket = getBucket(item)
-		const monotonic = getMonotonic(item)
-		let changes = []
+		const ended = []
 
-		// a lot of time has passed, flush all
-		if ((monotonic - latestMonotonic) > length) {
-			latestMonotonic = monotonic
-			changes = flush()
-		}
-
-		const expiredBuckets = removeLower(expiringSoon, monotonic)
-		for (let i = 0; i < expiredBuckets.length; i ++) {
-			const bucket = expiredBuckets[i]
-			changes.push(bucket, END)
-			streaks.delete(bucket)
-		}
-
-		if (streaks.has(bucket)) {
-			const expiringAt = streaks.get(bucket)
-			if (monotonic > expiringAt) {
-				changes.push(bucket, END, bucket, START)
+		const changes = _check(item)
+		for (let i = 0; i < changes.length; i += 2) {
+			const bucket = changes[i]
+			const ev = changes[i + 1]
+			if (ev === END) {
+				ended.push(store.get(bucket))
+				store.delete(bucket)
 			}
-		} else {
-			changes.push(bucket, START)
 		}
 
-		latestMonotonic = monotonic
-		const expiringAt = monotonic + length
-		streaks.set(bucket, expiringAt)
-		insert(expiringSoon, expiringAt, bucket)
-
-		return changes
+		store.set(bucket, item)
+		return ended
 	}
 
 	const flush = () => {
-		const changes = new Array(streaks.size * 2)
-		let i = 0
-		for (const bucket of streaks.keys()) {
-			changes[i++] = bucket
-			changes[i++] = END
+		const ended = []
+		const changes = _flush()
+		for (let i = 0; i < changes.length; i += 2) {
+			const bucket = changes[i]
+			ended.push(store.get(bucket))
+			store.delete(bucket)
 		}
-
-		streaks = new Map() // reset
-		return changes
+		return ended
 	}
 
 	return {
@@ -70,6 +51,4 @@ const findStreaks = (length, getBucket, getMonotonic) => {
 	}
 }
 
-findStreaks.START = START
-findStreaks.END = END
-module.exports = findStreaks
+module.exports = keepLastOfStreaks

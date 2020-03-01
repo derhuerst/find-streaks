@@ -6,6 +6,7 @@
 	"files": [
 		"index.js",
 		"lib",
+		"starts-ends.js",
 		"example.js"
 	],
 	"keywords": [

@@ -1,14 +1,13 @@
 'use strict'
 
-const keepLastOfStreaks = require('.')
-const {START, END} = keepLastOfStreaks
+const keepLastOfStreaks = require('..')
 
 const item1 = {kind: 'a', t: 0}
 const item2 = {kind: 'a', t: 1}
 const item3 = {kind: 'b', t: 2}
 const item4 = {kind: 'c', t: 2}
-const item4 = {kind: 'c', t: 5}
-const item5 = {kind: 'b', t: 6}
+const item5 = {kind: 'c', t: 5}
+const item6 = {kind: 'b', t: 6}
 
 const streakLength = 3
 const bucket = item => item.kind

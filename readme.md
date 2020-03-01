@@ -69,6 +69,18 @@ check(item6) // [item3]
 flush() // [item5, item6]
 ```
 
+### as a [transform stream](https://nodejs.org/api/stream.html#stream_class_stream_transform)
+
+```js
+const keepLastStream = require('find-streaks/stream')
+
+const keepLast = keepLastStream(streakLength, bucket, monotonic)
+keepLast.on('data', console.log)
+keepLast.write(item1)
+// …
+keepLast.end()
+```
+
 ## finding raw starts & ends of streaks
 
 ```js

@@ -81,6 +81,21 @@ keepLast.write(item1)
 keepLast.end()
 ```
 
+### as a [callbag](https://github.com/callbag/callbag#callbag-) operator
+
+```js
+const keepLastCallbag = require('find-streaks/callbag')
+const {pipe, fromIter, forEach} = require('callbag-basics')
+
+const keepLast = keepLastCallbag(streakLength, bucket, monotonic)
+
+pipe(
+	fromIter([item1, item2, item3, item4, item5, item6]),
+	keepLast,
+	forEach(console.log)
+)
+```
+
 ## finding raw starts & ends of streaks
 
 ```js

@@ -7,6 +7,7 @@
 		"index.js",
 		"lib",
 		"stream.js",
+		"callbag.js",
 		"starts-ends.js",
 		"example.js"
 	],
@@ -26,7 +27,8 @@
 	"dependencies": {
 	},
 	"devDependencies": {
-		"benchmark": "^2.1.4"
+		"benchmark": "^2.1.4",
+		"callbag-basics": "^3.2.0"
 	},
 	"scripts": {
 		"benchmark": "env NODE_ENV=production node benchmark/index.js",
